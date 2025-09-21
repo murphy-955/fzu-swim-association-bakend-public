@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>上传新闻</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        .form-group button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .form-group button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<h1>上传新闻</h1>
+<form id="uploadNewsForm">
+    <div class="form-group">
+        <label for="token">Token</label>
+        <input type="text" id="token" name="token" required>
+    </div>
+    <div class="form-group">
+        <label for="title">新闻标题</label>
+        <input type="text" id="title" name="title" required>
+    </div>
+    <div class="form-group">
+        <label for="contentText">新闻内容</label>
+        <textarea id="contentText" name="contentText" rows="4" required></textarea>
+    </div>
+    <div class="form-group">
+        <label for="imageUpload">上传图片</label>
+        <input type="file" id="imageUpload" name="imageUpload" multiple accept="image/*">
+    </div>
+    <div class="form-group">
+        <button type="button" onclick="uploadNews()">上传新闻</button>
+    </div>
+</form>
+<div id="responseMessage"></div>
+
+<script>
+    async function uploadNews() {
+        const token = document.getElementById('token').value;
+        const title = document.getElementById('title').value;
+        const contentText = document.getElementById('contentText').value;
+        const imageUpload = document.getElementById('imageUpload').files;
+
+        if (!token || !title || !contentText) {
+            document.getElementById('responseMessage').innerText = "所有字段都是必填的";
+            return;
+        }
+
+        // 创建内容数组
+        const content = [
+            {
+                type: "text",
+                data: contentText
+            }
+        ];
+
+        // 将图片文件转换为Base64字符串
+        const promises = Array.from(imageUpload).map(file => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    content.push({
+                        type: "image",
+                        data: e.target.result.split(",")[1] // 去掉Base64前缀
+                    });
+                    resolve();
+                };
+                reader.onerror = function (error) {
+                    reject(error);
+                };
+                reader.readAsDataURL(file); // 读取为Base64字符串
+            });
+        });
+
+        // 等待所有图片读取完成
+        await Promise.all(promises);
+
+        // 构建请求体
+        const requestBody = {
+            token: token,
+            title: title,
+            content: content
+        };
+
+        try {
+            const response = await fetch('http://localhost:8080/admin/uploadNews', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            });
+
+            const result = await response.json();
+            document.getElementById('responseMessage').innerText = `状态码: ${result.statusCode}, 消息: ${result.message}`;
+        } catch (error) {
+            document.getElementById('responseMessage').innerText = `发生错误: ${error}`;
+        }
+    }
+</script>
+</body>
+</html>

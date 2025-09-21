@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!--namespace: 命名空间，用于区分不同的mapper-->
+<mapper namespace="com.fzuswimassociation.mappers.SportMapper">
+    <!--声明sql语句-->
+    <!--注意Mapper.xml文件中引用的方法不能重载，否则会报错-->
+    <update id="register">
+        UPDATE competition_details
+        SET register_event = #{type}
+        WHERE competition_id = #{competitionId} AND athlete_id = #{athleteId}
+    </update>
+
+    <select id="getAthleteTypes">
+        SELECT register_event
+        FROM competition_details
+        WHERE competition_id = #{competitionId} AND athlete_id = #{athleteId}
+    </select>
+
+    <select id="preview"
+    resultType="com.fzuswimassociation.pojo.PreviewRegister">
+        SELECT * FROM competitions c
+        WHERE c.competition_id = #{gameId}
+    </select>
+
+    <select id="getAthleteDetail"
+            resultType="com.fzuswimassociation.pojo.AthleteDetail">
+        SELECT * FROM competition_details cd
+        WHERE cd.competition_id = #{gameId}
+    </select>
+
+    <select id="export">
+        SELECT competition_name,athlete_name,athlete_id,register_event,college
+        FROM competitions c
+        LEFT JOIN competition_details cd ON c.competition_id = cd.competition_id
+        WHERE c.competition_id = #{gameId}
+    </select>
+
+    <select id="showRegisterCompetition">
+        SELECT competition_id,competition_name
+        FROM competitions
+        WHERE end_time > NOW()
+    </select>
+</mapper>
+

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!--namespace: 命名空间，用于区分不同的mapper-->
+<mapper namespace="com.fzuswimassociation.mappers.NewsMapper">
+    <!--声明sql语句-->
+    <!--注意Mapper.xml文件中引用的方法不能重载，否则会报错-->
+    <select id="getNewsList"
+            resultType="com.fzuswimassociation.pojo.News">
+        SELECT title , id ,publish_time , view
+        FROM news
+        WHERE deleted = false
+    </select>
+
+    <select id="getDetailNews"
+            resultType="com.fzuswimassociation.pojo.News">
+        SELECT title , id , content ,view , img_url , video_url , publish_time , type , video_preview_img_url , deleted
+        FROM NEWS
+        WHERE id = #{id} AND deleted = false;
+    </select>
+    <select id="replaceDeletedNews"
+            resultType="com.fzuswimassociation.pojo.News">
+        SELECT title , id ,publish_time , view , deleted
+        FROM news
+        WHERE id = #{id};
+    </select>
+
+    <select id="getImage">
+        SELECT img_data
+        FROM news_img
+        WHERE id = #{id}
+    </select>
+
+    <select id="getVideo">
+        SELECT video_data
+        FROM news_video
+        WHERE id = #{id}
+    </select>
+
+    <update id="updateNewsView">
+        UPDATE news
+        SET view = view + 1
+        WHERE id = #{id}
+    </update>
+</mapper>
+

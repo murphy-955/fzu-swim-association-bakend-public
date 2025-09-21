@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sport API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Sport API Test</h1>
+
+    <!-- Register Form -->
+    <h2>Register Athlete</h2>
+    <form id="registerForm">
+        <div class="form-group">
+            <label for="token">Token</label>
+            <input type="text" id="token" name="token" required>
+        </div>
+        <div class="form-group">
+            <label for="gameId">Game ID</label>
+            <input type="text" id="gameId" name="gameId" required>
+        </div>
+        <div class="form-group">
+            <label for="athleteId">Athlete ID</label>
+            <input type="text" id="athleteId" name="athleteId" required>
+        </div>
+        <div class="form-group">
+            <label for="type">Event Type</label>
+            <input type="text" id="type" name="type" required>
+        </div>
+        <button type="button" onclick="registerAthlete()">Register</button>
+    </form>
+
+    <!-- Preview Form -->
+    <h2>Preview Registration</h2>
+    <form id="previewForm">
+        <div class="form-group">
+            <label for="previewToken">Token</label>
+            <input type="text" id="previewToken" name="token" required>
+        </div>
+        <div class="form-group">
+            <label for="previewGameId">Game ID</label>
+            <input type="text" id="previewGameId" name="gameId" required>
+        </div>
+        <button type="button" onclick="previewRegistration()">Preview</button>
+    </form>
+
+    <!-- Export Form -->
+    <h2>Export Registration</h2>
+    <form id="exportForm">
+        <div class="form-group">
+            <label for="exportToken">Token</label>
+            <input type="text" id="exportToken" name="token" required>
+        </div>
+        <div class="form-group">
+            <label for="exportGameId">Game ID</label>
+            <input type="text" id="exportGameId" name="gameId" required>
+        </div>
+        <button type="button" onclick="exportRegistration()">Export</button>
+    </form>
+
+    <!-- Response Output -->
+    <h2>Response</h2>
+    <pre id="responseOutput"></pre>
+</div>
+
+<script>
+    function registerAthlete() {
+        const token = document.getElementById('token').value;
+        const gameId = document.getElementById('gameId').value;
+        const athleteId = document.getElementById('athleteId').value;
+        const type = document.getElementById('type').value;
+
+        const data = {
+            token: token,
+            gameId: gameId,
+            athleteId: athleteId,
+            type: type
+        };
+
+        fetch('/sport/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('responseOutput').textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                document.getElementById('responseOutput').textContent = error.message;
+            });
+    }
+
+    function previewRegistration() {
+        const token = document.getElementById('previewToken').value;
+        const gameId = document.getElementById('previewGameId').value;
+
+        const data = {
+            token: token,
+            gameId: gameId
+        };
+
+        fetch('/sport/preview', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('responseOutput').textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                document.getElementById('responseOutput').textContent = error.message;
+            });
+    }
+
+    function exportRegistration() {
+        const token = document.getElementById('exportToken').value;
+        const gameId = document.getElementById('exportGameId').value;
+
+        const data = {
+            token: token,
+            gameId: gameId
+        };
+
+        fetch('/sport/export', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'export.xlsx';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.getElementById('responseOutput').textContent = 'Export successful';
+            })
+            .catch(error => {
+                document.getElementById('responseOutput').textContent = error.message;
+            });
+    }
+</script>
+</body>
+</html>

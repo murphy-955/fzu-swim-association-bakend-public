@@ -1,0 +1,175 @@
+###
+GET http://localhost:8080/activity/getNewsList?page=2&limit=10
+
+###
+GET http://localhost:8080/activity/getDetailNews?id=5
+
+###
+GET http://localhost:8080/activity/getImage?uuid=60b76a6880604d9ea6911732b439b892
+
+###
+GET http://localhost:8080/activity/getVideo?uuid=463e8e75af7e4d448bb6ca2b90d905b5
+
+###
+GET http://localhost:8080/leader/getLeaderList
+
+###
+GET http://localhost:8080/leader/getLeaderDetail?id=1
+
+###
+GET http://localhost:8080/player/excellentAthletesList
+
+###
+GET http://localhost:8080/player/excellentAthleteDetail?id=1
+
+###
+POST http://localhost:8080/admin/login
+Content-Type: application/json
+
+{
+  "userName": "admin",
+  "password": "a26b45b84ae59f3be8b917fbad74d7775eef3f8f68741634b571caf14307c0e7"
+}
+
+###
+POST http://localhost:8080/admin/deleteNews
+Content-Type: application/json
+
+{
+  "id": 12,
+  "token": "eyJ6aXAiOiJHWklQIiwiYWxnIjoiSFM1MTIifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDe1sDQxMjA31VEqLU4t8kwBitUCAPNaCKsvAAAA.nKhXXnZs45XQneNfom2qwq58x4lZXA6AlgxbMw7sBQR02Dql2Ki_ryrPFCTFGUdp--2QzSJmqCKpKeY_pWbj_g"
+}
+
+###
+POST http://localhost:8080/admin/withdrawDeletionNews
+Content-Type: application/json
+
+{
+  "id": 12,
+  "token": "eyJ6aXAiOiJHWklQIiwiYWxnIjoiSFM1MTIifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDc1szA0NzEz1lEqLU4t8kwBitUCANaQRukvAAAA.odh-ln0JvAWWzHbhbVYHc9d_Bm4-qcpYDL5PoEIgAg10uPckRJgl4QEd5LMZjbJeCttVBRUGfVfQ5RwSVv3sEQ"
+}
+
+###
+POST http://localhost:8080/admin/addLeader
+Content-Type: application/json
+
+{
+  "token": "eyJ6aXAiOiJHWklQIiwiYWxnIjoiSFM1MTIifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDe1MDQztjAz0VEqLU4t8kwBitUCAN0BHUkvAAAA.BcS0cgkY9qbjzDAqaLrstDhg0npldsK0T5vjbRDmcC6V2JfJDwM9Uvpnp4JIc52EWXrTdIKbNhGZkK0z6OLJxA",
+  "name": "李泽聿",
+  "age": 18,
+  "introduction": "年赴俄我把覅对于",
+  "position": "教授"
+}
+
+###
+POST http://localhost:8080/admin/deleteLeader
+Content-Type: application/json
+
+{
+  "id": 1,
+  "token": "eyJ6aXAiOiJHWklQIiwiYWxnIjoiSFM1MTIifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDc1szA0NzEz1lEqLU4t8kwBitUCANaQRukvAAAA.odh-ln0JvAWWzHbhbVYHc9d_Bm4-qcpYDL5PoEIgAg10uPckRJgl4QEd5LMZjbJeCttVBRUGfVfQ5RwSVv3sEQ"
+}
+
+###
+POST http://localhost:8080/admin/addExcellentAthlete
+Content-Type: application/json
+
+{
+  "token": "eyJ6aXAiOiJHWklQIiwiYWxnIjoiSFM1MTIifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDc1szQwMrC01FEqLU4t8kwBitUCANGHXB0vAAAA.ynxJ6yzZoaiStW4zoqRdWF_q3NWkAtXw_Gfp7k_Zn1tp11m8rF6gR5XqQEDCPaNJgpz54oEilY8tUK5Oqjpm4w",
+  "name": "李泽聿",
+  "age": "20",
+  "grade": "大三",
+  "introduction": "国家健将"
+}
+
+###
+POST http://localhost:8080/admin/deleteExcellentAthlete
+Content-Type: application/json
+
+{
+  "id": 5,
+  "token": "eyJ6aXAiOiJHWklQIiwiYWxnIjoiSFM1MTIifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDc1szQwMrC01FEqLU4t8kwBitUCANGHXB0vAAAA.ynxJ6yzZoaiStW4zoqRdWF_q3NWkAtXw_Gfp7k_Zn1tp11m8rF6gR5XqQEDCPaNJgpz54oEilY8tUK5Oqjpm4w"
+}
+
+###
+POST http://localhost:8080/admin/uploadNews
+Content-Type: application/json
+
+{
+  "token": "eyJ6aXAiOiJHWklQIiwiYWxnIjoiSFM1MTIifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDc1szQwMrC01FEqLU4t8kwBitUCANGHXB0vAAAA.ynxJ6yzZoaiStW4zoqRdWF_q3NWkAtXw_Gfp7k_Zn1tp11m8rF6gR5XqQEDCPaNJgpz54oEilY8tUK5Oqjpm4w",
+  "title": "测试新闻标题",
+  "content": []
+}
+
+###
+POST http://localhost:8080/admin/postSignUpList
+Content-Type: application/json
+
+{
+  "token": "eyJ6aXAiOiJHWklQIiwiYWxnIjoiSFM1MTIifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDe1MDExt7Qw11EqLU4t8kwBitUCANxeQGIvAAAA.LmaTUp26ouRjPBe8JcWiRR2LhFIjHQeKT3FH2rAb2P4AXE_uZIYsOUIlxXNAD3fWhml1pI53MQKzeP0RPV8zOQ",
+  "athleteLists": [
+    {
+      "name": "李泽聿",
+      "academicNumber": "102301237",
+      "college": "DEPARTMENT_OF_PHYSICAL_EDUCATION_AND_RESEARCH"
+    },
+    {
+      "name": "LiHua",
+      "academicNumber": "102301238",
+      "college": "DEPARTMENT_OF_PHYSICAL_EDUCATION_AND_RESEARCH"
+    }
+  ],
+  "activityTypes": [
+    "MANS_FREESTYLE_FREESTYLE_50_100M",
+    "MAN_FREESTYLE_100M"
+  ],
+  "colleges": [
+    "SCHOOL_OF_ADVANCED_MANUFACTURING_AND_OCEAN_COLLEGE",
+    "SCHOOL_OF_ELECTRICAL_ENGINEERING_AND_AUTOMATION"
+  ],
+  "collegeActivityLimits": 2,
+  "athleteActivityLimits": 2,
+  "sameActivityMaxLimit": 2,
+  "competitionName": "2025年福州大学振奋杯",
+  "leaderPhone": "13776528859",
+  "startTime": "",
+  "endTime": "2025-12-31"
+}
+
+
+###
+GET http://localhost:8080/register/getCollegeDetail
+
+
+###
+POST http://localhost:8080/sport/register
+Content-Type: application/json
+
+{
+  "name": "李泽聿",
+  "academicNumber": "102301237",
+  "sportType": "MAN_BREASTSTROKE_100M",
+  "college": "SCHOOL_OF_ADVANCED_MANUFACTURING_AND_OCEAN_COLLEGE",
+  "competitionId": "b9bad5922889491ca868ec570bed48fc"
+}
+
+
+###
+GET http://localhost:8080/sport/showRegisterCompetition
+###
+POST http://localhost:8080/sport/preview
+Content-Type: application/json
+
+{
+  "token": "eyJ6aXAiOiJHWklQIiwiYWxnIjoiSFM1MTIifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDe1MDExt7Qw11EqLU4t8kwBitUCANxeQGIvAAAA.LmaTUp26ouRjPBe8JcWiRR2LhFIjHQeKT3FH2rAb2P4AXE_uZIYsOUIlxXNAD3fWhml1pI53MQKzeP0RPV8zOQ",
+  "gameId": "0372069768514c718fd3a94ed9c7c842"
+}
+
+###
+POST http://localhost:8080/sport/export
+Content-Type: application/json
+
+{
+  "token": "eyJ6aXAiOiJHWklQIiwiYWxnIjoiSFM1MTIifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDe1MDA3tTSw1FEqLU4t8kwBitUCALvlbXQvAAAA.QIkuSY3Nig3eELi1QvXOyko4vpP30iQtmkCIIup7qZ_ydSXxXh3HM4kwerzAI1MfbS4eUzS-1BtTE05j-ASErg",
+  "gameId": "b9bad5922889491ca868ec570bed48fc"
+}

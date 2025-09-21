@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!--namespace: 命名空间，用于区分不同的mapper-->
+<mapper namespace="com.fzuswimassociation.mappers.ManagerMapper">
+    <!--声明sql语句-->
+    <!--注意Mapper.xml文件中引用的方法不能重载，否则会报错-->
+    <select id="login"
+            resultType="com.fzuswimassociation.pojo.Manager">
+        SELECT * FROM manager
+        WHERE user_name = #{userName} AND password = #{password}
+    </select>
+
+    <update id="deleteNews">
+        UPDATE news
+        SET deleted = true
+        WHERE id = #{id}
+    </update>
+
+    <update id="withdrawDeletionNews">
+        UPDATE news
+        SET deleted = false
+        WHERE id = #{id}
+    </update>
+
+    <insert id="addLeader">
+        INSERT INTO leader (name, age, introduction, position)
+        VALUES (#{name}, #{age}, #{introduction}, #{position})
+    </insert>
+
+    <delete id="deleteLeader">
+        DELETE FROM leader
+        WHERE id = #{id}
+    </delete>
+
+    <insert id="addExcellentAthlete">
+        INSERT INTO excellent_athletes (name, age, grade, introduction)
+        VALUES (#{athleteName}, #{athleteAge}, #{athleteGrade}, #{athleteIntroduction})
+    </insert>
+
+    <delete id="deleteExcellentAthlete">
+        DELETE FROM excellent_athletes
+        WHERE id = #{id}
+    </delete>
+
+    <insert id="saveNewsContent">
+        INSERT INTO news (img_url, content, title, type, publish_time)
+        VALUES (#{imgUrl}, #{data}, #{title}, #{type}, NOW())
+    </insert>
+
+    <insert id="saveNewsImg">
+        INSERT INTO news_img (id, img_data)
+        VALUES (#{imgId}, #{data})
+    </insert>
+
+    <insert id="uploadNews">
+        INSERT INTO news_img (id, img_data)
+        VALUES (#{newsId}, #{data})
+    </insert>
+
+    <insert id="saveVideoPreviewImg">
+        INSERT INTO news_img (id, img_data)
+        VALUES (#{id}, #{data})
+    </insert>
+
+    <insert id="saveVideo">
+        INSERT INTO news_video (id, video_data)
+        VALUES (#{videoId}, #{videoData})
+    </insert>
+
+    <insert id="saveGeneralVideoInformation">
+        INSERT INTO news(title, content, video_url, video_preview_img_url, type, publish_time)
+        VALUES (#{title}, #{content}, #{videoUrl}, #{videoPreviewImgUrl}, #{type}, NOW())
+    </insert>
+
+    <insert id="insertCompetitions">
+        INSERT INTO competitions ( competition_id, competition_name, start_time, end_time, allowed_events, college_activity_limit, athlete_activity_limit, same_activity_max_limit, leader_phone, allowed_colleges)
+        VALUES ( #{id}, #{name}, NOW(), #{end} ,#{events}, #{collegeLimits}, #{athleteLimits}, #{activityLimits}, #{phone}, #{college} )
+    </insert>
+    <insert id="insertCompetitionsDetails">
+        INSERT INTO competition_details (competition_id, detail_id, athlete_name, athlete_id, college)
+        VALUES (#{cid}, #{did}, #{name}, #{id}, #{college})
+    </insert>
+
+</mapper>
+
+

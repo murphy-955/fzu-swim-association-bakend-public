@@ -1,21 +1,26 @@
 package com.fzuswimassociation.service;
 
 import com.fzuswimassociation.annotation.CheckToken;
+import com.fzuswimassociation.annotation.ManagerLimitLogin;
 import com.fzuswimassociation.enm.ActivityTypesEnum;
 import com.fzuswimassociation.enm.FzuAcademyEnum;
 import com.fzuswimassociation.enm.StatusCodeEnum;
 import com.fzuswimassociation.mappers.ManagerMapper;
 import com.fzuswimassociation.pojo.vo.*;
+import com.fzuswimassociation.strategy.login.LoginFactory;
+import com.fzuswimassociation.until.ContentTypeToFileSuffixNameUtil;
 import com.fzuswimassociation.until.JwtUtil;
 import com.fzuswimassociation.until.Response;
 import com.fzuswimassociation.pojo.Manager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -29,7 +34,6 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class ManagerService {
-    private static final Logger log = LoggerFactory.getLogger(ManagerService.class);
     @Autowired
     private ManagerMapper managerMapper;
 
@@ -37,25 +41,20 @@ public class ManagerService {
     private JwtUtil jwtUtil;
 
     @Autowired
+    private LoginFactory loginFactory;
+
+    @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
-    public Map<String, Object> login(ManagerLoginVo managerLoginVo) {
-        System.out.printf("user name: %s, password: %s%n", managerLoginVo.getUserName(),
-                managerLoginVo.getPassword());
-        Manager manager = managerMapper.login(managerLoginVo.getUserName(), managerLoginVo.getPassword());
-        if (manager == null) {
-            return Response.failed(StatusCodeEnum.LOGIN_FAILED, null);
-        }
-        String token = jwtUtil.createToken(manager.getId());
-        Map<String, Object> res = new HashMap<>();
-        res.put("token", token);
-        return Response.success(res);
+    @ManagerLimitLogin
+    public Map<String, Object> login(ManagerLoginVo vo, String requestIp) {
+        vo.setIp(requestIp);
+        return loginFactory.login(vo.getLoginType()).login(vo);
     }
 
     @CheckToken
     public Map<String, Object> deleteNews(DeleteNewsVo deleteNewsVo) {
         int isDeleted = managerMapper.deleteNews(deleteNewsVo.getId());
-        System.out.printf("isDeleted = %d%n", isDeleted);
         if (isDeleted == 1) {
             return Response.success(null);
         }
@@ -63,8 +62,8 @@ public class ManagerService {
     }
 
     @CheckToken
-    public Map<String, Object> withdrawDeletionNews(DeleteNewsVo deleteNewsVo) {
-        int isUpdated = managerMapper.withdrawDeletionNews(deleteNewsVo.getId());
+    public Map<String, Object> withdrawNews(DeleteNewsVo deleteNewsVo) {
+        int isUpdated = managerMapper.withdrawNews(deleteNewsVo.getId());
         if (isUpdated == 1) {
             return Response.success(null);
         }
@@ -91,8 +90,8 @@ public class ManagerService {
     }
 
     @CheckToken
-    public Map<String, Object> addExcellentAthlete(AddExcellentAthleteVo addExcellentAthleteVo) {
-        int res = managerMapper.addExcellentAthlete(addExcellentAthleteVo.getName(), addExcellentAthleteVo.getAge(),
+    public Map<String, Object> addExcellence(AddExcellentAthleteVo addExcellentAthleteVo) {
+        int res = managerMapper.addExcellence(addExcellentAthleteVo.getName(), addExcellentAthleteVo.getAge(),
                 addExcellentAthleteVo.getGrade(), addExcellentAthleteVo.getIntroduction());
         if (res == 1) {
             return Response.success(null);
@@ -101,8 +100,8 @@ public class ManagerService {
     }
 
     @CheckToken
-    public Map<String, Object> deleteExcellentAthlete(DeleteNewsVo deleteNewsVo) {
-        int res = managerMapper.deleteExcellentAthlete(deleteNewsVo.getId());
+    public Map<String, Object> deleteExcellence(DeleteNewsVo deleteNewsVo) {
+        int res = managerMapper.deleteExcellence(deleteNewsVo.getId());
         if (res == 1) {
             return Response.success(null);
         }
@@ -110,52 +109,50 @@ public class ManagerService {
     }
 
     @CheckToken
-    public Map<String, Object> uploadNews(UploadNewsVo uploadNewsVo) {
-        List<Content> contentList = uploadNewsVo.getContent();
+    public Map<String, Object> uploadImage(UploadImageVo vo) {
+        byte[] bytes;
+        try {
+            bytes = vo.getImg().getBytes();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         // 雪花算法获取imgId
         String imgId = UUID.randomUUID().toString().replace("-", "");
-        String imgUrl = "/activity/getNewsImage?id=%s".formatted(imgId);
-        int res = 0;
-        for (Content c : contentList) {
-            if (c.getType().equals("text")) {
-                // 保存文本内容到数据库
-                res = managerMapper.saveNewsContent(imgUrl, c.getData().toString(),
-                        uploadNewsVo.getTitle(), c.getType());
-            } else {
-                try {
-                    byte[] imgData = Base64.getDecoder().decode(c.getData().toString());
-                    res = managerMapper.saveNewsImg(imgId, imgData);
-                } catch (Exception e) {
-                    log.error("上传图片失败", e);
-                }
-            }
+        String imgType = ContentTypeToFileSuffixNameUtil.getSuffixName(vo.getImg().getContentType());
+        String imgUrl = "/activity/getNewsImage?id=%s&type=%s".formatted(imgId, imgType);
+
+        try {
+            Files.createDirectories(Path.of("images/"));
+            Files.write(Path.of("images/" + imgId + imgType), bytes);
+            Map<String, Object> params = new HashMap<>();
+            params.put("url", imgUrl);
+            return Response.success(params);
+        } catch (IOException e) {
+            return Response.failed(StatusCodeEnum.FAILED_TO_UPLOAD_NEWS, null);
         }
-        if (res == 1) {
-            return Response.success(null);
-        }
-        return Response.failed(StatusCodeEnum.FAILED_TO_UPLOAD_NEWS, null);
     }
 
     @CheckToken
-    public Map<String, Object> uploadVideo(UploadVideoVo uploadVideoVo) {
+    public Map<String, Object> uploadVideo(UploadVideoVo vo) {
+        byte[] bytes;
+        try {
+            bytes = vo.getVideo().getBytes();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         // 获取videoId
         String videoId = UUID.randomUUID().toString().replace("-", "");
-        String videoUrl = "/activity/getNewsVideo?id=%s".formatted(videoId);
-        String videoPreviewImgId, videoPreviewImgUrl = "";
-        int imgRes = 0;
-        if (uploadVideoVo.getVideoPreviewImg() != null) {
-            System.out.println(uploadVideoVo.getVideoPreviewImg().length);
-            videoPreviewImgId = UUID.randomUUID().toString().replace("-", "");
-            videoPreviewImgUrl = "/activity/getNewsImage?id=%s".formatted(videoPreviewImgId);
-            imgRes = managerMapper.saveVideoPreviewImg(videoPreviewImgId, uploadVideoVo.getVideoPreviewImg());
+        String videoType = ContentTypeToFileSuffixNameUtil.getSuffixName(vo.getVideo().getContentType());
+        String videoUrl = "/activity/getNewsVideo?id=%s&type=%s".formatted(videoId, videoType);
+        try {
+            Files.createDirectories(Path.of("videos/"));
+            Files.write(Path.of("videos/" + videoId + videoType), bytes);
+            Map<String, Object> params = new HashMap<>();
+            params.put("videoUrl", videoUrl);
+            return Response.success(params);
+        } catch (Exception e) {
+            return Response.failed(StatusCodeEnum.FAILED_TO_UPLOAD_VIDEO, null);
         }
-        int videoRes = managerMapper.saveVideo(videoId, uploadVideoVo.getVideo());
-        int newsRes = managerMapper.saveGeneralVideoInformation(videoUrl, videoPreviewImgUrl, uploadVideoVo.getTitle(),
-                uploadVideoVo.getContent(), "video");
-        if (videoRes == 1 && newsRes == 1 && imgRes == 1) {
-            return Response.success(null);
-        }
-        return Response.failed(StatusCodeEnum.FAILED_TO_UPLOAD_VIDEO, null);
     }
 
     @CheckToken
@@ -192,7 +189,7 @@ public class ManagerService {
             if (res == 1) {
                 // 将比赛uuid作为key，比赛允许报名项目作为value存入redis，并设置过期时间
                 // 用于比赛报名时判断运动员勾选项目是否允许报名
-                redisTemplate.opsForValue().set("competition:" + "id:" + competitionId, allowedEvents,
+                redisTemplate.opsForValue().set("competition:" + "id:" + competitionId + ":activity_types:", allowedEvents,
                         expireTime, TimeUnit.SECONDS);
                 // 将比赛uuid+college作为key，比赛允许报名的学院作为value存入redis
                 // 用于比赛报名时判断运动员所属学院是否允许报名
@@ -230,4 +227,70 @@ public class ManagerService {
     }
 
 
+    @CheckToken
+    public Map<String, Object> getAdminList(GetManagerListVo vo) {
+        List<Manager> managers = managerMapper.getAdminList();
+        return Response.success(managers);
+    }
+
+    @CheckToken
+    public Map<String, Object> deleteAdmin(DeleteAdminVo vo) {
+        int res = managerMapper.deleteAdmin(vo.getAdminId());
+        if (res == 1) {
+            return Response.success(null);
+        }
+        return Response.failed(StatusCodeEnum.FAILED_TO_DELETE_ADMIN, null);
+    }
+
+    @CheckToken
+    public Map<String, Object> addAdmin(AddAdminVo vo) {
+        int res = managerMapper.addAdmin(vo.getAdminName(), vo.getPassword());
+        if (res == 1) {
+            return Response.success(null);
+        }
+        return Response.failed(StatusCodeEnum.FAILED_TO_ADD_ADMIN, null);
+    }
+
+    @CheckToken
+    public Map<String, Object> updateAdmin(UpdateAdminVo vo) {
+        int res = managerMapper.updateAdmin(vo.getId(), vo.getAdminName(), vo.getPassword());
+        if (res == 1) {
+            return Response.success(null);
+        }
+        return Response.failed(StatusCodeEnum.FAILED_TO_UPDATE_ADMIN, null);
+    }
+
+    @CheckToken
+    public Map<String, Object> uploadNews(UploadNewsVo vo) {
+        String tittle = vo.getTitle();
+        String content = "";
+        String img_url = "";
+        String video_url = "";
+        for (Content i : vo.getContent()) {
+            if (i.getType().equals("image")&&i.getData()!=null) {
+                img_url = img_url.concat((String) i.getData());
+                img_url = img_url.concat("&&");
+            }
+            if (i.getType().equals("video")&&i.getData()!=null) {
+                video_url = video_url.concat((String) i.getData());
+            }
+            if (i.getType().equals("text")) {
+                content = content.concat((String) i.getData());
+            }
+        }
+        Map<String, Object> params = new HashMap<>();
+        params.put("title", vo.getTitle());
+        params.put("type", "text");
+        params.put("content", content);
+        params.put("imgUrl", img_url);
+        params.put("videoUrl", video_url);
+
+        int res = managerMapper.uploadNews(params);
+
+        BigInteger id = (BigInteger) params.get("id");
+        if (res == 1) {
+            return Response.success(id);
+        }
+        return Response.failed(StatusCodeEnum.FAILED_TO_UPLOAD_NEWS, null);
+    }
 }

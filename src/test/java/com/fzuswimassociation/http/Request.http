@@ -5,10 +5,10 @@ GET http://localhost:8080/activity/getNewsList?page=2&limit=10
 GET http://localhost:8080/activity/getDetailNews?id=5
 
 ###
-GET http://localhost:8080/activity/getImage?uuid=60b76a6880604d9ea6911732b439b892
+GET http://localhost:8080/activity/getImage?uuid=4ca015ea635446a6a84002ee2b2abd41&type=png
 
 ###
-GET http://localhost:8080/activity/getVideo?uuid=463e8e75af7e4d448bb6ca2b90d905b5
+GET http://localhost:8080/activity/getVideo?uuid=846705b63d0041b383b7491418f78481&type=mp4
 
 ###
 GET http://localhost:8080/leader/getLeaderList
@@ -23,10 +23,11 @@ GET http://localhost:8080/player/excellentAthletesList
 GET http://localhost:8080/player/excellentAthleteDetail?id=1
 
 ###
-POST http://localhost:8080/admin/login
+POST http://106.15.90.163:10086/admin/login
 Content-Type: application/json
 
 {
+  "loginType": "ACCOUNT_SECRET_LOGIN",
   "userName": "admin",
   "password": "a26b45b84ae59f3be8b917fbad74d7775eef3f8f68741634b571caf14307c0e7"
 }
@@ -92,13 +93,49 @@ Content-Type: application/json
 }
 
 ###
+POST http://106.15.90.163:10086/admin/uploadNews
+Content-Type: application/json
+
+{
+  "token": "eyJ6aXAiOiJHWklQIiwiYWxnIjoiSFM1MTIifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDe1NDYwMzAw1FEqLU4t8kwBitUCADq0ImwvAAAA.0eCvTAbVm_jT989atD-rltJ8UPaP_iv1wZPNlq1EFzF1v45IzNXAi2S-qzfd-iaQU1MOTxjKydddOwpnK8VuUw",
+  "title": "测试新闻标题",
+  "content": [
+    {
+      "type": "text",
+      "data": "测试新闻内容"
+    },
+    {
+      "type": "image",
+      "data": null
+    }
+  ]
+}
+
+###
 POST http://localhost:8080/admin/uploadNews
 Content-Type: application/json
 
 {
-  "token": "eyJ6aXAiOiJHWklQIiwiYWxnIjoiSFM1MTIifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDc1szQwMrC01FEqLU4t8kwBitUCANGHXB0vAAAA.ynxJ6yzZoaiStW4zoqRdWF_q3NWkAtXw_Gfp7k_Zn1tp11m8rF6gR5XqQEDCPaNJgpz54oEilY8tUK5Oqjpm4w",
-  "title": "测试新闻标题",
-  "content": []
+  "token": "eyJ6aXAiOiJHWklQIiwiYWxnIjoiSFM1MTIifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDe1sLA0MDUy11EqLU4t8kwBitUCAM4PPAYvAAAA.X_akM1iDlx5f4m8YZ8DzfEMhxe26OuvkBgTv3X0bSvXg43X2JsB2rmOclmKl6bfPSehiCFYZ9RSo8OoOJWXIPw",
+  "title": "测试标题",
+  "content": [
+    {
+      "type": "text",
+      "data": "测试新闻内容"
+    },
+    {
+      "type": "image",
+      "data": "60b76a6880604d9ea6911732b439b892"
+    },
+    {
+      "type": "image",
+      "data": "60b76a6880604d9ea6911732b439b892"
+    },
+    {
+      "type": "video",
+      "data": "463e8e75af7e4d448bb6ca2b90d905b5"
+      }
+  ]
 }
 
 ###
@@ -106,7 +143,7 @@ POST http://localhost:8080/admin/postSignUpList
 Content-Type: application/json
 
 {
-  "token": "eyJ6aXAiOiJHWklQIiwiYWxnIjoiSFM1MTIifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDe1MDExt7Qw11EqLU4t8kwBitUCANxeQGIvAAAA.LmaTUp26ouRjPBe8JcWiRR2LhFIjHQeKT3FH2rAb2P4AXE_uZIYsOUIlxXNAD3fWhml1pI53MQKzeP0RPV8zOQ",
+  "token": "eyJ6aXAiOiJHWklQIiwiYWxnIjoiSFM1MTIifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDe1NLKwNDEx1lEqLU4t8kwBitUCAEx1BhgvAAAA.XsoRVvN35dyZ_st7BESb3Ajlyq7tUAXrj9hPwebjA34ZEP-BDsMQJHKHDENsz92Nexh-TWO45ufGf7n1-pjCkw",
   "athleteLists": [
     {
       "name": "李泽聿",
@@ -136,6 +173,44 @@ Content-Type: application/json
   "endTime": "2025-12-31"
 }
 
+###
+POST http://localhost:8080/admin/getAdminList
+Content-Type: application/json
+
+{
+ "token": "eyJ6aXAiOiJHWklQIiwiYWxnIjoiSFM1MTIifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDe1MDM3MjC11FEqLU4t8kwBitUCAEnYOXUvAAAA.mntbNc_kvvKPW-La7bFFhOxo7o5ESqvLrJbbPd8cgqcf2i0hH1zTmQc7BojQfWdnq4sBYQnMA9APD4dqwg0lKA"
+}
+
+
+###
+POST http://localhost:8080/admin/deleteAdmin
+Content-Type: application/json
+
+{
+  "token": "eyJ6aXAiOiJHWklQIiwiYWxnIjoiSFM1MTIifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDe1MDM3MjC11FEqLU4t8kwBitUCAEnYOXUvAAAA.mntbNc_kvvKPW-La7bFFhOxo7o5ESqvLrJbbPd8cgqcf2i0hH1zTmQc7BojQfWdnq4sBYQnMA9APD4dqwg0lKA",
+  "adminId": "2"
+}
+
+###
+POST http://localhost:8080/admin/addAdmin
+Content-Type: application/json
+
+{
+  "token": "eyJ6aXAiOiJHWklQIiwiYWxnIjoiSFM1MTIifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDe1MDM3MjC11FEqLU4t8kwBitUCAEnYOXUvAAAA.mntbNc_kvvKPW-La7bFFhOxo7o5ESqvLrJbbPd8cgqcf2i0hH1zTmQc7BojQfWdnq4sBYQnMA9APD4dqwg0lKA",
+  "adminName": "fbuiebv9uevbue",
+  "password": "sjocvduovdhipfuwiojfweoifiowef"
+}
+
+###
+POST http://localhost:8080/admin/updateAdmin
+Content-Type: application/json
+
+{
+  "token": "eyJ6aXAiOiJHWklQIiwiYWxnIjoiSFM1MTIifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDe1MDM3MjC11FEqLU4t8kwBitUCAEnYOXUvAAAA.mntbNc_kvvKPW-La7bFFhOxo7o5ESqvLrJbbPd8cgqcf2i0hH1zTmQc7BojQfWdnq4sBYQnMA9APD4dqwg0lKA",
+  "id": "3",
+  "adminName": "lzy",
+  "password": "10086"
+}
 
 ###
 GET http://localhost:8080/register/getCollegeDetail
@@ -155,7 +230,8 @@ Content-Type: application/json
 
 
 ###
-GET http://localhost:8080/sport/showRegisterCompetition
+GET http://localhost:8080/sport/getGameList
+
 ###
 POST http://localhost:8080/sport/preview
 Content-Type: application/json
@@ -173,3 +249,6 @@ Content-Type: application/json
   "token": "eyJ6aXAiOiJHWklQIiwiYWxnIjoiSFM1MTIifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDe1MDA3tTSw1FEqLU4t8kwBitUCALvlbXQvAAAA.QIkuSY3Nig3eELi1QvXOyko4vpP30iQtmkCIIup7qZ_ydSXxXh3HM4kwerzAI1MfbS4eUzS-1BtTE05j-ASErg",
   "gameId": "b9bad5922889491ca868ec570bed48fc"
 }
+
+###
+GET http://localhost:8080/sport/getGameInfo?competitionId=45d884813655429881b826c66aca3e0d

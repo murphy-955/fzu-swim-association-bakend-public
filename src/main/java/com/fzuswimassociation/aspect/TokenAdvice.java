@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Field;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,17 +33,14 @@ public class TokenAdvice {
 
     @Before("checkTokenPointcut()")
     public void checkToken(JoinPoint joinPoint) throws TokenExpiredException {
-        String obj = joinPoint.getArgs()[0].toString();
-        System.out.println(obj);
-        // 匹配token
-        String regex = "token=(.*?)[,)]";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(obj);
         String token;
-        if (matcher.find()) {
-            token = matcher.group(0);
-            token = token.substring(6, token.length() - 1);
-        } else {
+
+        Object firstArg = joinPoint.getArgs()[0];
+        try {
+            Field tokenField = firstArg.getClass().getDeclaredField("token");
+            tokenField.setAccessible(true);
+            token = (String) tokenField.get(firstArg);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new TokenExpiredException();
         }
         if (jwtUtil.isExpiration(token)) {

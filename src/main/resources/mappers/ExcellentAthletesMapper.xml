@@ -8,13 +8,13 @@
 <mapper namespace="com.fzuswimassociation.mappers.ExcellentAthletesMapper">
     <!--声明sql语句-->
     <!--注意Mapper.xml文件中引用的方法不能重载，否则会报错-->
-    <select id="getExcellentAthletesList"
+    <select id="getExcellenceList"
             resultType="com.fzuswimassociation.pojo.ExcellentAthletes">
         SELECT  id,name, age, grade, img_url, introduction
         FROM excellent_athletes;
     </select>
 
-    <select id="getExcellentAthleteDetail"
+    <select id="getExcellentDetail"
             resultType="com.fzuswimassociation.pojo.ExcellentAthletes">
         SELECT  id,name, age, grade, img_url, introduction
         FROM excellent_athletes

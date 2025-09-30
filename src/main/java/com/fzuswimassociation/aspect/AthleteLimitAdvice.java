@@ -39,7 +39,7 @@ public class AthleteLimitAdvice {
         athleteLimit = (Integer) redisTemplate.opsForValue()
                 .get("competition:" + "athlete_limit:" + competitionId);
         if (athleteLimit != null && redisCount > athleteLimit) {
-            throw new AthleteRegisterOverLimitException("运动员超过限制个人允许租到报名项目限制");
+            throw new AthleteRegisterOverLimitException("运动员超过限制个人允许最大报名项目限制");
         }
     }
 

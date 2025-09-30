@@ -14,7 +14,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 @SpringBootTest
 public class TestRedis {
     @Autowired
-    private RedisTemplate<String,Object> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Test
     public void testRedis() {

@@ -29,19 +29,19 @@ public class NewsController {
         return newsService.getNewsList(page, limit);
     }
 
-    @GetMapping("getDetailNews")
-    public Map<String, Object> getDetailNews(@RequestParam(value = "id") Integer id) {
-        return newsService.getDetailNews(id);
+    @GetMapping("getNewsDetail")
+    public Map<String, Object> getNewsDetail(@RequestParam(value = "id") Integer id) {
+        return newsService.getNewsDetail(id);
     }
 
     @GetMapping("/getImage")
-    public ResponseEntity<byte[]> getImage(@RequestParam(value = "uuid") String id) {
-        return newsService.getImage(id);
+    public ResponseEntity<byte[]> getImage(@RequestParam(value = "uuid") String id,@RequestParam("type") String type) {
+        return newsService.getImage(id,type);
     }
 
     @GetMapping("getVideo")
-    public ResponseEntity<byte[]> getVideo(@RequestParam(value = "uuid") String id) {
-        return newsService.getVideo(id);
+    public ResponseEntity<byte[]> getVideo(@RequestParam(value = "uuid") String id,@RequestParam("type") String type) {
+        return newsService.getVideo(id,type);
     }
 
 }

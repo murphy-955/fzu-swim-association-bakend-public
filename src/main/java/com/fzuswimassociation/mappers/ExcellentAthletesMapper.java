@@ -14,7 +14,7 @@ import java.util.List;
 @Mapper
 public interface ExcellentAthletesMapper {
 
-    List<ExcellentAthletes> getExcellentAthletesList();
+    List<ExcellentAthletes> getExcellenceList();
 
-    ExcellentAthletes getExcellentAthleteDetail(Integer id);
+    ExcellentAthletes getExcellentDetail(Integer id);
 }

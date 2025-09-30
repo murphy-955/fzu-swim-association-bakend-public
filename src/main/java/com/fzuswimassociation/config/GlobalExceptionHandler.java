@@ -55,4 +55,10 @@ public class GlobalExceptionHandler {
     public Map<String, Object> handleAthleteRegisterOverLimitException(AthleteRegisterOverLimitException e) {
         return Response.failed(StatusCodeEnum.ATHLETE_REGISTER_OVER_LIMIT, null);
     }
+
+    @ExceptionHandler(ManagerLoginToMatchException.class)
+    @ResponseBody
+    public Map<String, Object> handleManagerLoginToMatchException(ManagerLoginToMatchException e) {
+        return Response.failed(StatusCodeEnum.REQUESTS_ARE_TOO_FREQUENT, null);
+    }
 }

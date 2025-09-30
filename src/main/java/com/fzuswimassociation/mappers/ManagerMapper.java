@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 管理员持久层
@@ -21,7 +23,7 @@ public interface ManagerMapper {
 
     int deleteNews(Integer id);
 
-    int withdrawDeletionNews(Integer id);
+    int withdrawNews(Integer id);
 
     int addLeader(
             @Param("name") String name,
@@ -32,13 +34,13 @@ public interface ManagerMapper {
 
     int deleteLeader(Integer id);
 
-    int addExcellentAthlete(
+    int addExcellence(
             @Param("athleteName") String athleteName,
             @Param("athleteAge") String athleteAge,
             @Param("athleteGrade") String athleteGrade,
             @Param("athleteIntroduction") String athleteIntroduction);
 
-    int deleteExcellentAthlete(Integer id);
+    int deleteExcellence(Integer id);
 
     int saveNewsContent(
             @Param("imgUrl") String imgUrl,
@@ -46,16 +48,6 @@ public interface ManagerMapper {
             @Param("title") String title,
             @Param("type") String type);
 
-    int saveNewsImg(
-            @Param("imgId") String imgId,
-            @Param("data") byte[] data);
-
-
-    int saveVideoPreviewImg(@Param("id") String videoPreviewImgId,
-                            @Param("data") byte[] videoPreviewImg);
-
-    int saveVideo(@Param("videoId") String videoId,
-                  @Param("videoData") byte[] video);
 
     int saveGeneralVideoInformation(@Param("videoUrl") String videoUrl,
                                     @Param("videoPreviewImgUrl") String videoPreviewImgUrl,
@@ -79,4 +71,17 @@ public interface ManagerMapper {
                                   @Param("name") String name,
                                   @Param("id") String academicNumber,
                                   @Param("college") FzuAcademyEnum college);
+
+    List<Manager> getAdminList();
+
+    int deleteAdmin(String adminId);
+
+    int addAdmin(@Param("userName") String adminName,
+                 @Param("password") String password);
+
+    int updateAdmin(@Param("id") String id,
+                    @Param("userName") String adminName,
+                    @Param("password") String password);
+
+    int uploadNews(Map<String, Object> params);
 }

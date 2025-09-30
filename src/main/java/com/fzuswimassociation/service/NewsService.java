@@ -3,8 +3,8 @@ package com.fzuswimassociation.service;
 import com.fzuswimassociation.enm.StatusCodeEnum;
 import com.fzuswimassociation.mappers.NewsMapper;
 import com.fzuswimassociation.pojo.News;
-import com.fzuswimassociation.pojo.NewsImage;
 import com.fzuswimassociation.pojo.NewsVideo;
+import com.fzuswimassociation.until.ContentTypeToFileSuffixNameUtil;
 import com.fzuswimassociation.until.ReplacePublishFiguresUtil;
 import com.fzuswimassociation.until.Response;
 import com.github.pagehelper.PageHelper;
@@ -14,7 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayInputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -70,7 +70,7 @@ public class NewsService {
      * @since 2025-08-28 11:07
      */
 
-    public Map<String, Object> getDetailNews(Integer id) {
+    public Map<String, Object> getNewsDetail(Integer id) {
         News detailNews = newsMapper.getDetailNews(id);
         if (detailNews == null || newsMapper.updateNewsView(id) == 0) {
             return Response.failed(StatusCodeEnum.GET_DETAIL_NEWS_FAILED, new ArrayList<>());
@@ -91,18 +91,20 @@ public class NewsService {
      * @since 2025-09-07 08:12
      */
 
-    public ResponseEntity<byte[]> getImage(String id) {
-        NewsImage newsImage = newsMapper.getImage(id);
-        if (newsImage.getImgData() != null) {
-            ByteArrayInputStream imgData = new ByteArrayInputStream(newsImage.getImgData());
+    public ResponseEntity<byte[]> getImage(String id, String type) {
+        String path = "imgs/" + id + "." + type;
+
+        try (FileInputStream imgByte = new FileInputStream(path)) {
+            BufferedInputStream stream = new BufferedInputStream(imgByte);
             HttpHeaders headers = new HttpHeaders();
-            headers.add("Content-Type", "image/jpeg");
+            headers.add("Content-Type", ContentTypeToFileSuffixNameUtil.getContentType(type));
             return ResponseEntity.ok().headers(headers)
-                    .body(imgData.readAllBytes());
+                    .body(stream.readAllBytes());
+        } catch (IOException e) {
+            return ResponseEntity
+                    .status(StatusCodeEnum.FAILED_TO_GET_THE_PICTURE.getStatusCode())
+                    .body(null);
         }
-        return ResponseEntity.
-                status(StatusCodeEnum.FAILED_TO_GET_THE_PICTURE.getStatusCode())
-                .body(null);
     }
 
     /**
@@ -114,17 +116,18 @@ public class NewsService {
      * @since 2025-09-07 08:13
      */
 
-    public ResponseEntity<byte[]> getVideo(String id) {
-        NewsVideo newsVideo = newsMapper.getVideo(id);
-        if (newsVideo.getVideoData() != null) {
-            ByteArrayInputStream videoByte = new ByteArrayInputStream(newsVideo.getVideoData());
+    public ResponseEntity<byte[]> getVideo(String id, String type) {
+        String path = "videos/" + id + "." + type;
+        try (FileInputStream inputStream = new FileInputStream(path);
+             BufferedInputStream stream = new BufferedInputStream(inputStream)) {
             HttpHeaders headers = new HttpHeaders();
-            headers.add("Content-Type", "video/mp4");
+            headers.add("Content-Type", ContentTypeToFileSuffixNameUtil.getContentType(type));
             return ResponseEntity.ok().headers(headers)
-                    .body(videoByte.readAllBytes());
+                    .body(stream.readAllBytes());
+        } catch (IOException e) {
+            return ResponseEntity
+                    .status(StatusCodeEnum.FAILED_TO_GET_THE_NEWS_VIDEO.getStatusCode()).body(null);
         }
 
-        return ResponseEntity
-                .status(StatusCodeEnum.FAILED_TO_GET_THE_NEWS_VIDEO.getStatusCode()).body(null);
     }
 }

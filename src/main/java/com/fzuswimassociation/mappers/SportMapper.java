@@ -35,5 +35,5 @@ public interface SportMapper {
 
     List<ExportAthlete> export(@NotNull String gameId);
 
-    List<CompetitionPreview> showRegisterCompetition();
+    List<CompetitionPreview> getGameList();
 }

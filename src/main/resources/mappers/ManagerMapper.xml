@@ -20,7 +20,7 @@
         WHERE id = #{id}
     </update>
 
-    <update id="withdrawDeletionNews">
+    <update id="withdrawNews">
         UPDATE news
         SET deleted = false
         WHERE id = #{id}
@@ -36,30 +36,29 @@
         WHERE id = #{id}
     </delete>
 
-    <insert id="addExcellentAthlete">
+    <insert id="addExcellence">
         INSERT INTO excellent_athletes (name, age, grade, introduction)
         VALUES (#{athleteName}, #{athleteAge}, #{athleteGrade}, #{athleteIntroduction})
     </insert>
 
-    <delete id="deleteExcellentAthlete">
+    <delete id="deleteExcellence">
         DELETE FROM excellent_athletes
         WHERE id = #{id}
     </delete>
 
-    <insert id="saveNewsContent">
-        INSERT INTO news (img_url, content, title, type, publish_time)
-        VALUES (#{imgUrl}, #{data}, #{title}, #{type}, NOW())
-    </insert>
+    <update id="saveNewsContent">
+<!--        INSERT INTO news (img_url, content, title, type, publish_time)-->
+<!--        VALUES (#{imgUrl}, #{data}, #{title}, #{type}, NOW())-->
+        UPDATE news
+        SET img_url = #{imgUrl}, content = #{data}, title = #{title},
+        type = #{type}, publish_time = NOW()
+    </update>
 
     <insert id="saveNewsImg">
         INSERT INTO news_img (id, img_data)
         VALUES (#{imgId}, #{data})
     </insert>
 
-    <insert id="uploadNews">
-        INSERT INTO news_img (id, img_data)
-        VALUES (#{newsId}, #{data})
-    </insert>
 
     <insert id="saveVideoPreviewImg">
         INSERT INTO news_img (id, img_data)
@@ -71,19 +70,48 @@
         VALUES (#{videoId}, #{videoData})
     </insert>
 
+    <insert id="uploadNews" parameterType="map"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO news
+        (title, type, publish_time,img_url,video_url,content)
+        VALUES (#{title}, #{type}, NOW(), #{imgUrl}, #{videoUrl}, #{content})
+    </insert>
+
     <insert id="saveGeneralVideoInformation">
         INSERT INTO news(title, content, video_url, video_preview_img_url, type, publish_time)
         VALUES (#{title}, #{content}, #{videoUrl}, #{videoPreviewImgUrl}, #{type}, NOW())
     </insert>
 
     <insert id="insertCompetitions">
-        INSERT INTO competitions ( competition_id, competition_name, start_time, end_time, allowed_events, college_activity_limit, athlete_activity_limit, same_activity_max_limit, leader_phone, allowed_colleges)
-        VALUES ( #{id}, #{name}, NOW(), #{end} ,#{events}, #{collegeLimits}, #{athleteLimits}, #{activityLimits}, #{phone}, #{college} )
+        INSERT INTO competitions ( competition_id, competition_name, start_time, end_time, allowed_events,
+        college_activity_limit, athlete_activity_limit, same_activity_max_limit, leader_phone, allowed_colleges)
+        VALUES ( #{id}, #{name}, NOW(), #{end} ,#{events}, #{collegeLimits}, #{athleteLimits}, #{activityLimits},
+        #{phone}, #{college} )
     </insert>
     <insert id="insertCompetitionsDetails">
         INSERT INTO competition_details (competition_id, detail_id, athlete_name, athlete_id, college)
         VALUES (#{cid}, #{did}, #{name}, #{id}, #{college})
     </insert>
+
+    <select id="getAdminList">
+        SELECT id,user_name FROM manager
+    </select>
+
+    <delete id="deleteAdmin">
+        DELETE FROM manager
+        WHERE id = #{adminId}
+    </delete>
+
+    <insert id="addAdmin">
+        INSERT INTO manager (user_name, password)
+        VALUES (#{userName}, #{password})
+    </insert>
+
+    <update id="updateAdmin">
+        UPDATE manager
+        SET user_name = #{userName}, password = #{password}
+        WHERE id = #{id}
+    </update>
 
 </mapper>
 

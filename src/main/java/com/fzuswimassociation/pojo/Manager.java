@@ -13,5 +13,4 @@ import lombok.Data;
 public class Manager {
     private Long id;
     private String userName;
-    private String password;
 }

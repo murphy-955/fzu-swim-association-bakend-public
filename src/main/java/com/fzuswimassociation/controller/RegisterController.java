@@ -20,16 +20,8 @@ public class RegisterController {
     @Autowired
     private RegisterService registerService;
 
-    @PostMapping("/allowSportType")
-    public Map<String,Object> allowSportType(@RequestParam("game") String gameId){
-        return registerService.allowSportType(gameId);
-    }
-
     @GetMapping("/getCollegeDetail")
     public Map<String,Object> getCollegeDetail(){
         return registerService.getCollegeDetail();
     }
-
-
-
 }

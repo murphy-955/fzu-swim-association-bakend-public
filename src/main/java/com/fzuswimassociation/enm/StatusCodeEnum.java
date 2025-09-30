@@ -38,8 +38,11 @@ public enum StatusCodeEnum {
     ATHLETE_REGISTER_OVER_LIMIT(441, "运动员报名次数已达上限"),
     REGISTER_FAILED(442, "报名失败"),
     ATHLETE_CHOICE_ACTIVITY_IS_INCLUDED(443, "运动员不能报名相同的项目"),
-    REQUESTS_ARE_TOO_FREQUENT(444,"请求过于频繁，请稍后再试"),
-    GET_REGISTER_COMPETITION_FAILED(445, "获取报名比赛失败");
+    REQUESTS_ARE_TOO_FREQUENT(444, "请求过于频繁，请稍后再试"),
+    GET_REGISTER_COMPETITION_FAILED(445, "获取报名比赛失败"),
+    FAILED_TO_DELETE_ADMIN(446, "删除管理员失败"),
+    FAILED_TO_ADD_ADMIN(447, "添加管理员失败"),
+    FAILED_TO_UPDATE_ADMIN(448, "更新管理员失败");
 
     private final Integer statusCode;
     private final String message;

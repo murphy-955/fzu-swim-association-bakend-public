@@ -22,13 +22,13 @@ public class ExcellentAthletesService {
     @Autowired
     private ExcellentAthletesMapper excellentAthletesMapper;
 
-    public Map<String, Object> getExcellentAthletesList() {
-        List<ExcellentAthletes> excellentAthletesList = excellentAthletesMapper.getExcellentAthletesList();
+    public Map<String, Object> getExcellenceList() {
+        List<ExcellentAthletes> excellentAthletesList = excellentAthletesMapper.getExcellenceList();
         return Response.success(excellentAthletesList);
     }
 
-    public Map<String, Object> getExcellentAthleteDetail(Integer id) {
-        ExcellentAthletes excellentAthlete = excellentAthletesMapper.getExcellentAthleteDetail(id);
+    public Map<String, Object> getExcellentDetail(Integer id) {
+        ExcellentAthletes excellentAthlete = excellentAthletesMapper.getExcellentDetail(id);
         if (excellentAthlete == null) {
             return Response.failed(StatusCodeEnum.EXCELLENT_ATHLETES_DON_T_EXIST,null);
         }

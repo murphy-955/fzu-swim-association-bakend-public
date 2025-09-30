@@ -13,7 +13,7 @@ import lombok.Data;
 
 @Data
 public class Content {
-    @Pattern(regexp = "^(image|text$)",message = "传入的type类型只能是image或text",groups = {CheckUploadNews.class})
+    @Pattern(regexp = "^(image|text|video$)",message = "传入的type类型只能是image或text",groups = {CheckUploadNews.class})
     private String type;
-    private Object data;
+    private String data;
 }

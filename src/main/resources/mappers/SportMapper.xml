@@ -39,7 +39,7 @@
         WHERE c.competition_id = #{gameId}
     </select>
 
-    <select id="showRegisterCompetition">
+    <select id="getGameList">
         SELECT competition_id,competition_name
         FROM competitions
         WHERE end_time > NOW()

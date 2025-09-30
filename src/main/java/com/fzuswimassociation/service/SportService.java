@@ -116,11 +116,41 @@ public class SportService {
         writer.close();
     }
 
-    public Map<String, Object> showRegisterCompetition() {
-        List<CompetitionPreview> res = sportMapper.showRegisterCompetition();
+    /**
+     * 返回redis中的允许参赛项目列表<br>
+     * 具体实现见{@link ManagerService#postSignUpList}
+     *
+     * @return 参赛项目列表
+     * @author 李泽聿
+     * @since 2025-09-12 08:12
+     */
+    public Map<String, Object> getGameList() {
+        List<CompetitionPreview> res = sportMapper.getGameList();
         if (res == null) {
             return Response.failed(StatusCodeEnum.GET_REGISTER_COMPETITION_FAILED, null);
         }
-            return Response.success(res);
+        return Response.success(res);
+    }
+
+    public Map<String, Object> getGameInfo(String gameId) {
+        String key = "competition:" + "id:" + gameId + ":activity_types:";
+        System.out.println(key);
+        String allowedEvents = String.valueOf(redisTemplate.opsForValue().get(key));
+        // 从redis中获取允许参赛项目列表
+        if (allowedEvents == null) {
+            return Response.failed(StatusCodeEnum.COMPETITIONS_TIME_OUT, null);
+
+        }
+        // 封装返回结果
+        List<Object> res = new ArrayList<>();
+        Map<String, Object> map = new HashMap<>();
+        ActivityTypesEnum obj;
+        for (String i : allowedEvents.split("&&")) {
+            obj = ActivityTypesEnum.valueOf(i);
+            map.put("name", obj.getName());
+            map.put("enum", obj.name());
+            res.add(map);
+        }
+        return Response.success(res);
     }
 }

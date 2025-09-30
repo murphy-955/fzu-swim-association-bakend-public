@@ -1,7 +1,6 @@
 package com.fzuswimassociation.controller;
 
 import com.fzuswimassociation.service.ExcellentAthletesService;
-import com.fzuswimassociation.until.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,13 +69,13 @@ public class ExcellentAthletesController {
      * </pre>
      */
 
-    @GetMapping("/excellentAthletesList")
-    public Map<String, Object> getExcellentAthletesList() {
-        return excellentAthletesService.getExcellentAthletesList();
+    @GetMapping("/getExcellenceList")
+    public Map<String, Object> getExcellenceList() {
+        return excellentAthletesService.getExcellenceList();
     }
 
-    @GetMapping("/excellentAthleteDetail")
-    public Map<String, Object> getExcellentAthleteDetail(@RequestParam("id") Integer id) {
-        return excellentAthletesService.getExcellentAthleteDetail(id);
+    @GetMapping("/getExcellenceDetail")
+    public Map<String, Object> getExcellentDetail(@RequestParam("id") Integer id) {
+        return excellentAthletesService.getExcellentDetail(id);
     }
 }

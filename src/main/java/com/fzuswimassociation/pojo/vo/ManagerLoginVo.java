@@ -16,6 +16,8 @@ import lombok.Data;
 
 @Data
 public class ManagerLoginVo {
+    private String loginType;
     private String userName;
     private String password;
+    private String ip;
 }

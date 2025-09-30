@@ -27,15 +27,15 @@ public class SportController {
      * 运动员报名接口
      *
      * @param academicNumber 格式示例<pre>{@code
-     *      {
-     *           "name": "李泽聿",
-     *           "academicNumber": "102301237",
-     *           "sportType": "MAN_BREASTSTROKE_100M",
-     *           "college": "SCHOOL_OF_ADVANCED_MANUFACTURING_AND_OCEAN_COLLEGE",
-     *           "competitionId": "b9bad5922889491ca868ec570bed48fc"
-     *      }
-     *      }
-     *      </pre>
+     *                            {
+     *                                 "name": "李泽聿",
+     *                                 "academicNumber": "102301237",
+     *                                 "sportType": "MAN_BREASTSTROKE_100M",
+     *                                 "college": "SCHOOL_OF_ADVANCED_MANUFACTURING_AND_OCEAN_COLLEGE",
+     *                                 "competitionId": "b9bad5922889491ca868ec570bed48fc"
+     *                            }
+     *                            }
+     *                            </pre>
      * @return 成功：<pre>
      *    {@code
      *     {
@@ -97,22 +97,22 @@ public class SportController {
      * @since 2025-09-20 20:00
      */
 
-    @GetMapping("showRegisterCompetition")
-    public Map<String, Object> showRegisterCompetition() {
-        return sportService.showRegisterCompetition();
+    @GetMapping("getGameList")
+    public Map<String, Object> getGameList() {
+        return sportService.getGameList();
     }
 
     /**
      * 预览报名信息接口
      *
      * @param vo 格式示例<pre>
-     *              {@code
-     *                {
-     *                    "token": "管理员token",
-     *                    "gameId": "uuid"
-     *                }
-     *              }
-     *           </pre>
+     *                        {@code
+     *                          {
+     *                              "token": "管理员token",
+     *                              "gameId": "uuid"
+     *                          }
+     *                        }
+     *                     </pre>
      * @return 成功：<pre>
      * {@code
      *  {
@@ -159,14 +159,14 @@ public class SportController {
     /**
      * 导出报名信息接口为xlsx文件
      *
-     * @param vo 格式示例<pre>
-     *    {@code
-     *    {
-     *        "token": "管理员token",
-     *        "gameId": "uuid"
-     *    }
-     *    }
-     * </pre>
+     * @param vo       格式示例<pre>
+     *                    {@code
+     *                    {
+     *                        "token": "管理员token",
+     *                        "gameId": "uuid"
+     *                    }
+     *                    }
+     *                 </pre>
      * @param response response对象
      * @author 李泽聿
      * @since 2025-09-20 20:15
@@ -175,5 +175,18 @@ public class SportController {
     @PostMapping("export")
     public void export(@RequestBody PreviewRegisterInformationVo vo, HttpServletResponse response) throws Exception {
         sportService.export(vo, response);
+    }
+
+    /**
+     *
+     * @param id
+     * @return
+     * @author 李泽聿
+     * @since 2025-09-23 07:56
+     */
+
+    @GetMapping("getGameInfo")
+    public Map<String, Object> getGameInfo(@RequestParam("competitionId") String id) {
+        return sportService.getGameInfo(id);
     }
 }

@@ -36,7 +36,7 @@ public class ReplacePublishFiguresUtil {
      */
 
     public String replaceContent(String content) {
-        for (ExcellentAthletes i : excellentAthletesMapper.getExcellentAthletesList()) {
+        for (ExcellentAthletes i : excellentAthletesMapper.getExcellenceList()) {
             // 使用正则表带，匹配内容中是否含有人名
             if (content.matches(".*%s.*".formatted(i.getName()))) {
                 String tagA = """
